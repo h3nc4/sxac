@@ -1,0 +1,16 @@
+SXAC - Simple X Auto Clicker
+----------------------------
+
+SXAC is a simple X Auto Clicker. It is written in C and uses the XTest extension to simulate mouse clicks.
+
+Usage
+-----
+
+$ sxac
+
+This will start the auto clicker with default settings. The default settings are:
+
+- Click interval: 1000 ms
+- Click button: 1 (left mouse button)
+
+To end the auto clicker, press `Ctrl+C`.
