@@ -3,14 +3,54 @@ SXAC - Simple X Auto Clicker
 
 SXAC is a simple X Auto Clicker. It is written in C and uses the XTest extension to simulate mouse clicks.
 
+Requirements
+------------
+
+The libx11 and libxtst development libraries.
+
+Installation
+------------
+
+$ make
+# make install
+
 Usage
 -----
 
+Run the program with default settings:
+
 $ sxac
 
-This will start the auto clicker with default settings. The default settings are:
+This will start the auto clicker with the following default settings:
 
-- Click interval: 1000 ms
+- Click interval: 100 ms
 - Click button: 1 (left mouse button)
 
-To end the auto clicker, press `Ctrl+C`.
+To specify a different button, use the -b option followed by the button number:
+
+$ sxac -b 2
+
+The button options are:
+
+1: Left mouse button
+
+2: Middle mouse button
+
+3: Right mouse button
+
+To display usage information:
+
+$ sxac -h
+
+Stop the auto clicker by pressing Ctrl+C or sending a termination signal.
+
+$ pkill sxac
+
+License
+-------
+
+sxac is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License or (at your option) any later version.
+
+sxac is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+See LICENSE for more information.
