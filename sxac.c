@@ -40,8 +40,8 @@ int main(int argc, char *argv[])
 			button = atoi(optarg);
 			if (button < 1 || button > 3)
 			{
-				fprintf(stderr, "Invalid button number. Please use a number between 1 and 3.\n");
-				return 1;
+				fprintf(stderr, "%s: invalid button number '%d'\n", argv[0], button);
+				return EXIT_FAILURE;
 			}
 			break;
 		case 'h':
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 			return 0;
 		default:
 			print_usage(argv[0]);
-			return 1;
+			return EXIT_FAILURE;
 		}
 	}
 
@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 	if (!display)
 	{
 		fprintf(stderr, "Unable to open X display\n");
-		return 1;
+		return EXIT_FAILURE;
 	}
 
 	while (running)
