@@ -18,8 +18,9 @@ void handle_signal(int signal)
 
 void print_usage(const char *progname)
 {
-	fprintf(stderr, "Usage: %s [-b button_number] [-h]\n", progname);
+	fprintf(stderr, "Usage: %s [-b button_number] [-d delay_in_ms] [-h]\n", progname);
 	fprintf(stderr, "  -b button_number   Simulate button press (1-3)\n");
+	fprintf(stderr, "  -d delay_in_ms     Set the delay between events\n");
 	fprintf(stderr, "  -h                 Show this help message\n");
 }
 
@@ -29,10 +30,10 @@ int main(int argc, char *argv[])
 	signal(SIGTERM, handle_signal);
 
 	int button = 1;
-	int delay = 100000;
+	int delay = 100;
 
 	int opt;
-	while ((opt = getopt(argc, argv, "b:h")) != EOF)
+	while ((opt = getopt(argc, argv, "b:d:h")) != EOF)
 	{
 		switch (opt)
 		{
@@ -41,6 +42,14 @@ int main(int argc, char *argv[])
 			if (button < 1 || button > 3)
 			{
 				fprintf(stderr, "%s: invalid button number '%d'\n", argv[0], button);
+				return EXIT_FAILURE;
+			}
+			break;
+		case 'd':
+			delay = atoi(optarg);
+			if (delay < 0)
+			{
+				fprintf(stderr, "%s: invalid delay '%d'\n", argv[0], delay);
 				return EXIT_FAILURE;
 			}
 			break;
@@ -53,6 +62,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	delay = delay * 1000;
 	Display *display = XOpenDisplay(NULL);
 
 	if (!display)

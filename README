@@ -38,11 +38,15 @@ The button options are:
 
 3: Right mouse button
 
+To specify a different click interval, use the -d option followed by the interval in miliseconds:
+
+$ sxac -d 200
+
 To display usage information:
 
 $ sxac -h
 
-Stop the auto clicker by pressing Ctrl+C or sending a termination signal.
+Stop the auto clicker by pressing Ctrl+C or sending a termination signal:
 
 $ pkill sxac
 
