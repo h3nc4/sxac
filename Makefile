@@ -1,3 +1,4 @@
+# Compiler and flags
 CC = cc
 CFLAGS = -Wall -Wextra -pedantic
 LDFLAGS = -lX11 -lXtst
