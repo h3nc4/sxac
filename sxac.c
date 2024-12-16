@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <signal.h>
 #include <stdlib.h>
+#include <getopt.h>
 
 volatile int running = 1;
 
@@ -15,10 +16,43 @@ void handle_signal(int signal)
 	running = 0;
 }
 
-int main()
+void print_usage(const char *progname)
+{
+	fprintf(stderr, "Usage: %s [-b button_number] [-h]\n", progname);
+	fprintf(stderr, "  -b button_number   Simulate button press (1-3)\n");
+	fprintf(stderr, "  -h                 Show this help message\n");
+}
+
+int main(int argc, char *argv[])
 {
 	signal(SIGINT, handle_signal);
 	signal(SIGTERM, handle_signal);
+
+	int button = 1;
+	int delay = 100000;
+
+	int opt;
+	while ((opt = getopt(argc, argv, "b:h")) != EOF)
+	{
+		switch (opt)
+		{
+		case 'b':
+			button = atoi(optarg);
+			if (button < 1 || button > 3)
+			{
+				fprintf(stderr, "Invalid button number. Please use a number between 1 and 3.\n");
+				return 1;
+			}
+			break;
+		case 'h':
+			print_usage(argv[0]);
+			return 0;
+		default:
+			print_usage(argv[0]);
+			return 1;
+		}
+	}
+
 	Display *display = XOpenDisplay(NULL);
 
 	if (!display)
@@ -27,13 +61,11 @@ int main()
 		return 1;
 	}
 
-	int delay = 100000;
-
 	while (running)
 	{
-		XTestFakeButtonEvent(display, 1, True, CurrentTime);
+		XTestFakeButtonEvent(display, button, True, CurrentTime);
 		XFlush(display);
-		XTestFakeButtonEvent(display, 1, False, CurrentTime);
+		XTestFakeButtonEvent(display, button, False, CurrentTime);
 		XFlush(display);
 		usleep(delay);
 	}
