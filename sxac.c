@@ -55,14 +55,14 @@ int main(int argc, char *argv[])
 			break;
 		case 'h':
 			print_usage(argv[0]);
-			return 0;
+			return EXIT_SUCCESS;
 		default:
 			print_usage(argv[0]);
 			return EXIT_FAILURE;
 		}
 	}
 
-	delay = delay * 1000;
+	delay *= 1000;
 	Display *display = XOpenDisplay(NULL);
 
 	if (!display)
@@ -81,5 +81,5 @@ int main(int argc, char *argv[])
 	}
 
 	XCloseDisplay(display);
-	return 0;
+	return EXIT_SUCCESS;
 }
