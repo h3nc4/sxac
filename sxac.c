@@ -54,6 +54,17 @@ int handle_args(char opt, const char *progname, int *button, int *delay)
 	return 0;
 }
 
+Display *open_display(void)
+{
+	Display *display = XOpenDisplay(NULL);
+	if (!display)
+	{
+		fprintf(stderr, "Unable to open X display\n");
+		exit(EXIT_FAILURE);
+	}
+	return display;
+}
+
 int main(int argc, char *argv[])
 {
 	signal(SIGINT, handle_signal);
@@ -68,13 +79,7 @@ int main(int argc, char *argv[])
 			return EXIT_FAILURE;
 
 	delay *= 1000;
-	Display *display = XOpenDisplay(NULL);
-
-	if (!display)
-	{
-		fprintf(stderr, "Unable to open X display\n");
-		return EXIT_FAILURE;
-	}
+	Display *display = open_display();
 
 	while (running)
 	{
