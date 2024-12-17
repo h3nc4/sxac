@@ -24,6 +24,36 @@ void print_usage(const char *progname)
 	fprintf(stderr, "  -h                 Show this help message\n");
 }
 
+int handle_args(char opt, const char *progname, int *button, int *delay)
+{
+	switch (opt)
+	{
+	case 'b':
+		*button = atoi(optarg);
+		if (*button < 1 || *button > 3)
+		{
+			fprintf(stderr, "%s: invalid button number '%d'\n", progname, *button);
+			return 1;
+		}
+		break;
+	case 'd':
+		*delay = atoi(optarg);
+		if (*delay < 0)
+		{
+			fprintf(stderr, "%s: invalid delay '%d'\n", progname, *delay);
+			return 1;
+		}
+		break;
+	case 'h':
+		print_usage(progname);
+		return 1;
+	default:
+		print_usage(progname);
+		return 1;
+	}
+	return 0;
+}
+
 int main(int argc, char *argv[])
 {
 	signal(SIGINT, handle_signal);
@@ -34,33 +64,8 @@ int main(int argc, char *argv[])
 
 	int opt;
 	while ((opt = getopt(argc, argv, "b:d:h")) != EOF)
-	{
-		switch (opt)
-		{
-		case 'b':
-			button = atoi(optarg);
-			if (button < 1 || button > 3)
-			{
-				fprintf(stderr, "%s: invalid button number '%d'\n", argv[0], button);
-				return EXIT_FAILURE;
-			}
-			break;
-		case 'd':
-			delay = atoi(optarg);
-			if (delay < 0)
-			{
-				fprintf(stderr, "%s: invalid delay '%d'\n", argv[0], delay);
-				return EXIT_FAILURE;
-			}
-			break;
-		case 'h':
-			print_usage(argv[0]);
-			return EXIT_SUCCESS;
-		default:
-			print_usage(argv[0]);
+		if (handle_args(opt, argv[0], &button, &delay))
 			return EXIT_FAILURE;
-		}
-	}
 
 	delay *= 1000;
 	Display *display = XOpenDisplay(NULL);
