@@ -16,6 +16,11 @@ Installation
 $ make
 # make install
 
+or
+
+$ wget https://github.com/h3nc4/sxac/releases/latest/download/sxac
+# install -Dm755 sxac /usr/local/bin/sxac
+
 
 Usage
 -----
