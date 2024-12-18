@@ -13,6 +13,7 @@ volatile int running = 1;
 
 void handle_signal(int signal)
 {
+	fprintf(stdout, "\nCaught signal '%d'\n", signal);
 	running = 0;
 }
 
