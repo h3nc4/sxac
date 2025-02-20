@@ -1,27 +1,45 @@
-name: Release SXAC
+name: Build sxac
 
 on:
   push:
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+    tags: [ 'v*.*.*' ]
 
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
     container:
       image: debian:bookworm-slim
     steps:
-      - uses: actions/checkout@v4
-      - name: Install dependencies
-        run: |
-          export DEBIAN_FRONTEND=noninteractive
-          apt-get update
-          apt-get install --no-install-recommends -y gcc libc-dev libx11-dev libxtst-dev make
-      - name: Build
-        run: make
-      - name: Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: sxac
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Install dependencies
+      run: |
+        apt-get update
+        DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+          ca-certificates \
+          gcc \
+          git \
+          libc-dev \
+          gpg \
+          gpg-agent \
+          libx11-dev \
+          libxtst-dev \
+          make
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Build tar
+      run: make dist
+    - name: Import gpg key
+      run: echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+      env:
+        GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+    - name: Sign artifact
+      run: gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" --detach-sign --armor -o sxac.tgz.asc sxac.tgz
+      env:
+        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+          sxac.tgz.asc
+          sxac.tgz
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
