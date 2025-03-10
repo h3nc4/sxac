@@ -32,14 +32,14 @@ jobs:
       env:
         GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
     - name: Sign artifact
-      run: gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" --detach-sign --armor -o sxac.tgz.asc sxac.tgz
+      run: gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" --detach-sign --armor -o sxac.tar.gz.asc sxac.tar.gz
       env:
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
         files: |
-          sxac.tgz.asc
-          sxac.tgz
+          sxac.tar.gz.asc
+          sxac.tar.gz
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

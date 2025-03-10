@@ -25,7 +25,7 @@ dist: $(TARGET)
 	printf '#!/bin/sh\nset -e\n' >sxac-$(VERSION)/install
 	echo 'install -Dm755 sxac ${PREFIX}/bin/sxac' >>sxac-$(VERSION)/install
 	chmod +x sxac-$(VERSION)/install
-	tar czf sxac.tgz sxac-$(VERSION)
+	tar czf sxac.tar.gz sxac-$(VERSION)
 	rm -rf sxac-${VERSION}
 
 install: $(TARGET)
