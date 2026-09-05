@@ -1,6 +1,6 @@
 {
   "name": "sxac",
-  "image": "h3nc4/x11-wayland-dev:1",
+  "image": "h3nc4/x11-wayland-dev:2",
   "workspaceFolder": "/workspaces/sxac",
   "remoteUser": "dev",
   "postCreateCommand": "git config core.hooksPath scripts/hooks",
