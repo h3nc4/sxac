@@ -1,45 +1,54 @@
-name: Build sxac
+name: Release sxac
 
 on:
   push:
-    tags: [ 'v*.*.*' ]
+    tags:
+      - "v*.*.*"
 
 jobs:
-  build:
+  # A job's container is chosen before any of its steps run, so reading the pin needs a job of
+  # its own. .devcontainer.json is the only place this image is named.
+  image:
+    name: Read the pinned dev image
     runs-on: ubuntu-latest
-    container:
-      image: debian:bookworm-slim
+    outputs:
+      ref: ${{ steps.pin.outputs.ref }}
     steps:
-    - name: Install dependencies
-      run: |
-        apt-get update
-        DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-          ca-certificates \
-          gcc \
-          git \
-          libc-dev \
-          gpg \
-          gpg-agent \
-          libx11-dev \
-          libxtst-dev \
-          make
-    - name: Checkout code
-      uses: actions/checkout@v4
-    - name: Build tar
-      run: make dist
-    - name: Import gpg key
-      run: echo "$GPG_PRIVATE_KEY" | gpg --batch --import
-      env:
-        GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-    - name: Sign artifact
-      run: gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" --detach-sign --armor -o sxac.tar.gz.asc sxac.tar.gz
-      env:
-        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-    - name: Release
-      uses: softprops/action-gh-release@v2
-      with:
-        files: |
-          sxac.tar.gz.asc
-          sxac.tar.gz
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run actions/checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Read .devcontainer.json
+        id: pin
+        run: echo "ref=$(./scripts/devcontainer-image.sh)" >>"${GITHUB_OUTPUT}"
+
+  release:
+    name: Build and Release
+    runs-on: ubuntu-latest
+    needs: image
+    container:
+      image: ${{ needs.image.outputs.ref }}
+    permissions:
+      contents: write # creates the release
+    steps:
+      - name: Run actions/checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Build the release artifact
+        run: make dist
+      - name: Import the signing key
+        run: echo "${GPG_PRIVATE_KEY}" | gpg --batch --import
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+      - name: Sign the artifact
+        run: |
+          gpg --batch --yes --pinentry-mode loopback \
+            --passphrase "${GPG_PASSPHRASE}" \
+            --detach-sign --armor -o sxac.tar.gz.asc sxac.tar.gz
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      - name: Run softprops/action-gh-release
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3
+        with:
+          files: |
+            sxac.tar.gz.asc
+            sxac.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

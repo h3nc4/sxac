@@ -1,0 +1,4 @@
+*.o
+sxac
+sxac-*/
+*.tar.gz

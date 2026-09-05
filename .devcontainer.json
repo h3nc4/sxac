@@ -1,0 +1,20 @@
+{
+  "name": "sxac",
+  "image": "h3nc4/x11-wayland-dev:1",
+  "workspaceFolder": "/workspaces/sxac",
+  "remoteUser": "dev",
+  "postCreateCommand": "git config core.hooksPath scripts/hooks",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools",
+        "github.vscode-github-actions"
+      ],
+      "settings": {
+        "editor.insertSpaces": false,
+        "editor.tabSize": 8,
+        "files.insertFinalNewline": true
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:best-practices"
+  ],
+  "reviewers": [
+    "h3nc4"
+  ],
+  "assignAutomerge": true,
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 0,
+  "baseBranches": [
+    "master"
+  ],
+  "packageRules": [
+    {
+      "description": "Auto-merge all minor, patch, pin, and digest updates",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "addLabels": ["automerge"],
+      "automerge": true,
+      "platformAutomerge": true
+    },
+    {
+      "description": "The dev image's tag is a counter, so a new one reads as a major update. Nothing here publishes that image, so Renovate moving the pin in .devcontainer.json is the only way it ever moves",
+      "matchManagers": ["devcontainer"],
+      "matchUpdateTypes": ["major"],
+      "addLabels": ["automerge"],
+      "automerge": true,
+      "platformAutomerge": true
+    }
+  ]
+}
