@@ -7,16 +7,20 @@ SXAC is a simple X Auto Clicker. It is written in C and uses the XTest extension
 Requirements
 ------------
 
-libx11 and libxtst libraries are required to build sxac.
+libx11 and libxtst are required to build sxac, with their header packages.
+XTest has to be enabled in the running X server, which it is by default.
 
 
 Installation
 ------------
 
+Build it, where the second line needs root:
+
 $ make
 # make install
 
-or
+Or take the prebuilt binary, which is x86-64 and unsigned, so build from source
+where that matters:
 
 $ wget https://github.com/h3nc4/sxac/releases/latest/download/sxac
 # install -Dm755 sxac /usr/local/bin/sxac
@@ -39,14 +43,14 @@ To specify a different button, use the -b option followed by the button number:
 
 $ sxac -b 2
 
-The button options are:
+The button numbers are:
 
-1: Left mouse button
-2: Middle mouse button
-3: Right mouse button
+1   left mouse button
+2   middle mouse button
+3   right mouse button
 
 
-To specify a different click interval, use the -d option followed by the interval in miliseconds:
+To specify a different click interval, use the -d option followed by the interval in milliseconds:
 
 $ sxac -d 200
 
@@ -56,9 +60,16 @@ To display usage information:
 $ sxac -h
 
 
-Stop the auto clicker by pressing Ctrl+C or sending a termination signal:
+Stopping it
+-----------
+
+sxac clicks wherever the pointer happens to be, so a short interval can make the
+desktop hard to use while it runs. Ctrl+C stops it while it holds the foreground
+of a terminal. Started in the background, it takes a signal from elsewhere:
 
 $ pkill sxac
+
+Settle on one of those two before starting it with a small -d.
 
 
 License
