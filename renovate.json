@@ -32,6 +32,12 @@
       "addLabels": ["automerge"],
       "automerge": true,
       "platformAutomerge": true
+    },
+    {
+      "description": "Majors other than the dev image pin never automerge, so rebase them only on a conflict rather than rerunning CI each time the base branch moves",
+      "matchManagers": ["!devcontainer"],
+      "matchUpdateTypes": ["major"],
+      "rebaseWhen": "conflicted"
     }
   ]
 }
