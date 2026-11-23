@@ -25,6 +25,8 @@ where that matters:
 $ wget https://github.com/h3nc4/sxac/releases/latest/download/sxac
 # install -Dm755 sxac /usr/local/bin/sxac
 
+Every release attaches a signed Debian package too, which installs sxac under /usr. scripts/deb.sh builds the same package from a checkout, on a Debian or Devuan host with dpkg-dev and the build requirements above.
+
 
 Usage
 -----

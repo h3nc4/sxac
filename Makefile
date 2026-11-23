@@ -1,9 +1,13 @@
 # Compiler and flags
 VERSION = 1.0.1
 PREFIX = /usr/local
+MANPREFIX = $(PREFIX)/share/man
 CC = cc
-CFLAGS = -Wall -Wextra -pedantic
-LDFLAGS = -lX11 -lXtst
+WARNINGS = -Wall -Wextra -pedantic
+CPPFLAGS =
+CFLAGS =
+LDFLAGS =
+LDLIBS = -lX11 -lXtst
 TARGET = sxac
 SRCS = sxac.c
 OBJS = $(SRCS:.c=.o)
@@ -11,10 +15,10 @@ OBJS = $(SRCS:.c=.o)
 all: $(TARGET)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(WARNINGS) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 $(TARGET): $(OBJS)
-	$(CC) $(OBJS) $(LDFLAGS) -o $@
+	$(CC) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $@
 
 clean:
 	rm -f $(OBJS) $(TARGET)
@@ -29,9 +33,12 @@ dist: $(TARGET)
 	rm -rf sxac-${VERSION}
 
 install: $(TARGET)
-	install -Dm755 $(TARGET) /usr/local/bin/$(TARGET)
+	install -Dm755 $(TARGET) $(DESTDIR)$(PREFIX)/bin/$(TARGET)
+	mkdir -p $(DESTDIR)$(MANPREFIX)/man1
+	sed 's/VERSION/$(VERSION)/g' <$(TARGET).1 >$(DESTDIR)$(MANPREFIX)/man1/$(TARGET).1
+	chmod 644 $(DESTDIR)$(MANPREFIX)/man1/$(TARGET).1
 
 uninstall:
-	rm -f /usr/local/bin/$(TARGET)
+	rm -f $(DESTDIR)$(PREFIX)/bin/$(TARGET) $(DESTDIR)$(MANPREFIX)/man1/$(TARGET).1
 
 .PHONY: all clean install uninstall dist

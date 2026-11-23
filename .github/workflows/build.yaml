@@ -37,3 +37,21 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Run the checks
         run: ./scripts/ci.sh
+
+  deb:
+    name: Build the Debian package
+    runs-on: ubuntu-latest
+    container:
+      image: debian:trixie@sha256:9c6e381421d0f48d1b8133e573f33c185ee16cbf505eda9c4a8a4791b25ea8a6
+    steps:
+      - name: Install the packaging tools
+        run: |
+          apt-get update -qq
+          apt-get install --no-install-recommends -y -qq ca-certificates git make gcc \
+            libc6-dev libx11-dev libxtst-dev dpkg-dev lintian
+      - name: Run actions/checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Build the package
+        run: ./scripts/deb.sh
+      - name: Run lintian
+        run: lintian --fail-on error,warning sxac_*.deb

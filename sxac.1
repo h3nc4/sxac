@@ -1,0 +1,31 @@
+.TH SXAC 1 sxac\-VERSION
+.SH NAME
+sxac \- simple X auto clicker
+.SH SYNOPSIS
+.B sxac
+.RB [ \-b
+.IR button ]
+.RB [ \-d
+.IR delay ]
+.RB [ \-h ]
+.SH DESCRIPTION
+.B sxac
+clicks a mouse button wherever the pointer is, at a fixed interval, through the XTest extension of the X server named by
+.BR DISPLAY .
+It clicks until it receives SIGINT or SIGTERM.
+.SH OPTIONS
+.TP
+.BI \-b " button"
+Click button 1 (left), 2 (middle) or 3 (right). The default is 1.
+.TP
+.BI \-d " delay"
+Wait
+.I delay
+milliseconds between clicks. The default is 100.
+.TP
+.B \-h
+Print usage and exit.
+.SH NOTES
+A short delay can make the desktop hard to use while sxac runs. Ctrl+C stops it in the foreground of a terminal, and
+.B pkill sxac
+stops it from anywhere else.
