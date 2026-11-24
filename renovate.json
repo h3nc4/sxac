@@ -1,7 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:best-practices"
+    "config:best-practices",
+    "github>h3nc4/deps-branch-action"
   ],
   "reviewers": [
     "h3nc4"
@@ -9,9 +10,6 @@
   "assignAutomerge": true,
   "prConcurrentLimit": 0,
   "prHourlyLimit": 0,
-  "baseBranchPatterns": [
-    "master"
-  ],
   "packageRules": [
     {
       "description": "Auto-merge all minor, patch, pin, and digest updates",
@@ -32,12 +30,6 @@
       "addLabels": ["automerge"],
       "automerge": true,
       "platformAutomerge": true
-    },
-    {
-      "description": "Majors other than the dev image pin never automerge, so rebase them only on a conflict rather than rerunning CI each time the base branch moves",
-      "matchManagers": ["!devcontainer"],
-      "matchUpdateTypes": ["major"],
-      "rebaseWhen": "conflicted"
     }
   ]
 }
