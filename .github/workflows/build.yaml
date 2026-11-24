@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - "master"
+      - "deps"
   schedule:
     - cron: "51 5 * * 1" # Weekly, on Mondays
   workflow_dispatch:
